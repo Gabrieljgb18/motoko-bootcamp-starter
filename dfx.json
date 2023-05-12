@@ -19,6 +19,10 @@
     "day5": {
       "main": "src/day5/main.mo",
       "type": "motoko"
+    },
+    "mba": {
+      "main": "main.mo",
+      "type": "motoko"
     }
   },
   "defaults": {
