@@ -20,7 +20,7 @@ actor class StudentWall() {
   type Order = Order.Order;
 
   // Auxiliar Funtion Hash Nat --> Text
-  func _NatToHash (x : Nat) : Hash.Hash{
+  func _NatToHash(x : Nat) : Hash.Hash {
     Text.hash(Nat.toText(x));
   };
 
@@ -40,26 +40,25 @@ actor class StudentWall() {
     };
     wall.put(messageId, message);
     return messageId;
-    };
-  
+  };
 
   // Get a specific message by ID
   public shared query func getMessage(messageId : Nat) : async Result.Result<Message, Text> {
-    switch(wall.get(messageId)){
-      case(null){return #err ("messageId not found")};
-      case(?messageFound){
-        return #ok (messageFound);
-      }
-    }
+    switch (wall.get(messageId)) {
+      case (null) { return #err("messageId not found") };
+      case (?messageFound) {
+        return #ok(messageFound);
+      };
+    };
   };
 
   // Update the content for a specific message by ID
   public shared ({ caller }) func updateMessage(messageId : Nat, c : Content) : async Result.Result<(), Text> {
-    switch(wall.get(messageId)){
-      case(null){return #err ("messageId not found")};
-      case(?messageItem){
-        if(messageItem.creator != caller){
-          return #err ("Actor not allowed");
+    switch (wall.get(messageId)) {
+      case (null) { return #err("messageId not found") };
+      case (?messageItem) {
+        if (messageItem.creator != caller) {
+          return #err("Actor not allowed");
         };
         let messageUpdate : Message = {
           content = c;
@@ -74,9 +73,9 @@ actor class StudentWall() {
 
   // Delete a specific message by ID
   public shared ({ caller }) func deleteMessage(messageId : Nat) : async Result.Result<(), Text> {
-    switch(wall.get(messageId)){
-      case(null){return #err ("messageId not found")};
-      case(?messageItem){
+    switch (wall.get(messageId)) {
+      case (null) { return #err("messageId not found") };
+      case (?messageItem) {
         wall.delete(messageId);
         return #ok();
       };
@@ -85,9 +84,9 @@ actor class StudentWall() {
 
   // Voting
   public func upVote(messageId : Nat) : async Result.Result<(), Text> {
-    switch(wall.get(messageId)){
-      case(null){return #err ("messageId not found")};
-      case(?messageItem){
+    switch (wall.get(messageId)) {
+      case (null) { return #err("messageId not found") };
+      case (?messageItem) {
         let messageUpdate : Message = {
           content = messageItem.content;
           vote = messageItem.vote + 1;
@@ -101,9 +100,9 @@ actor class StudentWall() {
 
   //Down Vote
   public func downVote(messageId : Nat) : async Result.Result<(), Text> {
-    switch(wall.get(messageId)){
-      case(null){return #err ("messageId not found")};
-      case(?messageItem){
+    switch (wall.get(messageId)) {
+      case (null) { return #err("messageId not found") };
+      case (?messageItem) {
         let messageUpdate : Message = {
           content = messageItem.content;
           vote = messageItem.vote - 1;
@@ -122,13 +121,13 @@ actor class StudentWall() {
 
   // Wall Order
   func compareMessages(m1 : Message, m2 : Message) : Order {
-      if(m1.vote > m2.vote){
-        return #greater;
-      };
-      if(m1.vote == m2.vote){
-        return #equal;
-      };
-      return #less;    
+    if (m1.vote > m2.vote) {
+      return #greater;
+    };
+    if (m1.vote == m2.vote) {
+      return #equal;
+    };
+    return #less;
   };
 
   // Get all messages ordered by votes
